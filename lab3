@@ -3,27 +3,32 @@ close all;
 clc;
 
 %number of neurons = 2
-x = 0.1: 1/22: 1; %input set
+x = 0.1: 1/22: 1;%input set
 y(x) = (1 + 0.6 * sin (2 * pi * x / 0.7)) + 0.3 * sin (2 * pi * x)) / 2;%expected output
 
-a1 = randn(1); %weights (before neurons)
+a1 = randn(1);%weights (before neurons)
 a2 = randn(1);
 
-c1=[]; %prototype of neuron 1 
-c2=[]; %prototype of neuron 2
+c1=[0.1: 1/22: 1];%prototype of neuron 1 
+c2=[];%prototype of neuron 2
 
-p = exp(-(x-c)^2/(2*r^2)); %radial-basis function
+p1 = exp(-(x-c1)^2/(2);%radial-basis function
+p2 = exp(-(x-c2)^2/(2);
 
 %the output node 
-f(x)=a1*p(|x-c1|)+a2*p(|x-c2|);
+f(x)=a1*p1(|x-c1|)+a2*p2(|x-c2|);
 
-e = f(x)-y(x); %calculating the difference between 
+e = f(x)-y(x);%calculating the difference between estimated and expected output
 n1=0.12; %learning rate
 n2=0.15;
 
+%then update the weights 
 if e~=0
     a1(2)=a1+n1;
     a2(2)=a2+n2;
     
+    f(x)=a1(2)*p1(|x-c1|)+a2(2)*p2(|x-c2|);  
+end
+
 
 
