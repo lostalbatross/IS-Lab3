@@ -4,31 +4,45 @@ clc;
 
 %number of neurons = 2
 x = 0.1: 1/22: 1; %input set
-y(x) = (1 + 0.6 * sin (2 * pi * x / 0.7)) + 0.3 * sin (2 * pi * x)) / 2; %expected output
+d = (1 + 0.6 * sin (2 * pi * x / 0.7) + 0.3 * sin (2 * pi * x)) / 2; %expected output
+%to find prototypes of neurons
+plot(x,d,'k*')
+[pks,Position]=findpeaks(d);
+disp(x(Position))
 
-a1 = randn(1); %weights (before neurons)
-a2 = randn(1);
+w1 = randn(1); %weights (before neurons)
+w2 = randn(1);
+b = randn(1);
 
-c1=[0.1: 1/22: 1]; %prototype of neuron 1 
-c2=[]; %prototype of neuron 2
+% c1 = 0.2; 
+% c2 = 0.9;
+c1 = x(Position(1)); %prototype of neuron 1 
+c2 = x(Position(2)); %prototype of neuron 2
+r1 = 0.2;
+r2 = 0.2;
 
-p1 = exp(-(x-c1)^2/(2); %radial-basis function
-p2 = exp(-(x-c2)^2/(2);
-
-%the output node 
-f(x)=a1*p1(|x-c1|)+a2*p2(|x-c2|);
-
-e = f(x)-y(x); %calculating the difference between estimated and expected output
-n1=0.12; %learning rate
-n2=0.15;
-
-%then update the weights 
-if e~=0
-    a1(2)=a1+n1;
-    a2(2)=a2+n2;
+for j = 1:100000
+    for i = 1:20 
+        p1 = exp(-(x(i)-c1)^2/(2*r1^2)); %radial-basis function
+        p2 = exp(-(x(i)-c2)^2/(2*r2^2));
+        f=w1*p1+w2*p2 + b;
     
-    f(x)=a1(2)*p1(|x-c1|)+a2(2)*p2(|x-c2|);  
+        e = d(i) - f; %calculating the difference between estimated and expected output
+        n1=0.12; %learning rate
+        w1 = w1 + n1*p1*e; %updating the parameters
+        w2 = w2 + n1*p2*e;
+        b = b + n1*e;
+    end
 end
+F = zeros(20,1);
+for i = 1:20 
+        p1 = exp(-(x(i)-c1)^2/(2*r1^2)); %radial-basis function
+        p2 = exp(-(x(i)-c2)^2/(2*r2^2));
+        f=w1*p1+w2*p2 + b;
+    F(i) = f; 
+end
+
+figure, plot(x,d,'k*',x,F,'go')
 
 
 
